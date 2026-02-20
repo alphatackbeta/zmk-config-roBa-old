@@ -1,0 +1,20 @@
+#include <dt-bindings/zmk/keys.h>
+#include <mouse-gesture.dtsi>
+
+/ {
+  zip_mouse_gesture_l7: zip_mouse_gesture_l7 {
+    compatible = "zmk,input-processor-mouse-gesture";
+    #input-processor-cells = <0>;
+
+    enable-eager-mode;
+    stroke-size = <250>;
+    movement-threshold = <8>;
+    idle-timeout-ms = <120>;
+    gesture-cooldown-ms = <120>;
+
+    prev_tab { pattern = <GESTURE_LEFT>;  bindings = <&kp LC(LS(TAB))>; };
+    next_tab { pattern = <GESTURE_RIGHT>; bindings = <&kp LC(TAB)>; };
+    taskview  { pattern = <GESTURE_UP>;    bindings = <&kp LGUI(TAB)>; };
+    close_tab { pattern = <GESTURE_DOWN>;  bindings = <&kp LC(W)>; };
+  };
+};
