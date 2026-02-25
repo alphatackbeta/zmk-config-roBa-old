@@ -4,10 +4,13 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: kumamuk-git
       url-base: https://github.com/kumamuk-git
-    - name: iwk7273
-      url-base: https://github.com/iwk7273
     - name: arai-lab
       url-base: https://github.com/arai-lab
+    - name: badjeff
+      url-base: https://github.com/badjeff
+    - name: iwk7273
+      url-base: https://github.com/iwk7273
+
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -18,12 +21,12 @@ manifest:
       remote: kumamuk-git
       revision: main
 
-    # clips diagonal scroll input to dominant axis
+    # diagonal scroll clipper (public)
     - name: zmk-feature-xy_clipper
       remote: iwk7273
       revision: main
 
-    # mouse gesture + zip_temp_layer (Arai方式)
+    # mouse gesture module (public)
     - name: zmk-mouse-gesture
       remote: arai-lab
       revision: main
