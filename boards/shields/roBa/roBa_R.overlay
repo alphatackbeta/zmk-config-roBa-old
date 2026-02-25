@@ -1,25 +1,69 @@
 #include "roBa.dtsi"
+#include <dt-bindings/zmk/input_transform.h>
+#include <dt-bindings/input/input-event-codes.h>
+#include <input/processors.dtsi>
+
+/* mouse gesture */
+#include <mouse-gesture.dtsi>
+#include "../../../config/gesture/gesture_L7.dtsi"
+#include "../../../config/gesture/gesture_L8.dtsi"
+#include "../../../config/gesture/gesture_L9.dtsi"
 
 &default_transform {
     col-offset = <6>;
 };
 
 &kscan0 {
-        col-gpios
-            = <&xiao_d 10 GPIO_ACTIVE_HIGH>
-            , <&xiao_d 9 GPIO_ACTIVE_HIGH>
-            , <&xiao_d 8 GPIO_ACTIVE_HIGH>
-            , <&xiao_d 7 GPIO_ACTIVE_HIGH>
-            , <&gpio0 10 GPIO_ACTIVE_HIGH>
-            ;
+    col-gpios
+        = <&xiao_d 10 GPIO_ACTIVE_HIGH>
+        , <&xiao_d 9 GPIO_ACTIVE_HIGH>
+        , <&xiao_d 8 GPIO_ACTIVE_HIGH>
+        , <&xiao_d 7 GPIO_ACTIVE_HIGH>
+        , <&gpio0 10 GPIO_ACTIVE_HIGH>
+        ;
 };
 
 / {
+    /* diagonal clipper for scroll */
+    xy_clipper: xy_clipper {
+        compatible = "zmk,input-processor-xy-clipper";
+        #input-processor-cells = <0>;
+        threshold = <20>;
+        invert-x = <0>;
+        invert-y = <0>;
+    };
+
     trackball_listener {
         status = "okay";
         compatible = "zmk,input-listener";
         device = <&trackball>;
+
+        /* AML: move trackball -> temp layer 4 (MOUSE) for 10s */
+        input-processors = <&zip_temp_layer 4 10000>;
+
+        /* Scroll layer (L5) */
+        scroller {
+            layers = <5>;
+            input-processors =
+                <&xy_clipper>,
+                <&zip_xy_to_scroll_mapper>,
+                <&zip_scroll_scaler 2 5>;
+        };
+
+        /* Gesture layers (L7/L8/L9) */
+        gesture_l7 { layers = <7>; input-processors = <&zip_mouse_gesture_l7>; };
+        gesture_l8 { layers = <8>; input-processors = <&zip_mouse_gesture_l8>; };
+        gesture_l9 { layers = <9>; input-processors = <&zip_mouse_gesture_l9>; };
     };
+};
+
+/* AML: do NOT exit when pressing J/K/L */
+&zip_temp_layer {
+    excluded-positions = <
+        18 /* J */
+        19 /* K */
+        20 /* L */
+    >;
 };
 
 &pinctrl {
