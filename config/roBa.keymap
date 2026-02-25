@@ -11,8 +11,8 @@
 /*
  * NOTE:
  * SOA39方式(Arai方式)で overlay 側に
- *   - zip_temp_layer (AML)
- *   - scroller (scroll layer)
+ *   - zip_temp_layer (AML: move trackball -> temp layer 4)
+ *   - scroller (scroll layer 5)
  *   - mouse gesture (L7/L8/L9)
  * を書く前提なので、ここでの &trackball { automouse-layer / scroll-layers } は削除。
  */
@@ -46,20 +46,11 @@
             key-positions = <24 25>;
         };
 
-        jkl_test {
-            bindings = <&none>;
-            key-positions = <18 19 20>;
-        };
-
-        op_test {
-            bindings = <&none>;
+        /* O+P (pos 8,9) を押してる間だけ Gesture_L8 に入る */
+        gesture_l8_mo {
+            bindings = <&mo 8>;
             key-positions = <8 9>;
         };
-
-        /*
-         * ここに Gesture(L7/L8/L9)切替用 combo を追加したければ後で足す。
-         * （pos番号が確定してからの方が安全）
-         */
     };
 
     macros {
@@ -69,6 +60,34 @@
             bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
             label = "TO_LAYER_0";
         };
+
+        /* SOA39準拠: × 記号（Alt+0215） */
+        mul_mark: mul_mark {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_press>,
+                <&kp LEFT_ALT>,
+                <&macro_tap>,
+                <&kp KP_N0 &kp KP_N2 &kp KP_N1 &kp KP_N5>,
+                <&macro_release>,
+                <&kp LEFT_ALT>;
+            label = "MUL_MARK";
+        };
+
+        /* SOA39準拠: ÷ 記号（Alt+0247） */
+        div_mark: div_mark {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_press>,
+                <&kp LEFT_ALT>,
+                <&macro_tap>,
+                <&kp KP_N0 &kp KP_N2 &kp KP_N4 &kp KP_N7>,
+                <&macro_release>,
+                <&kp LEFT_ALT>;
+            label = "DIV_MARK";
+        };
     };
 
     behaviors {
@@ -76,7 +95,6 @@
             compatible = "zmk,behavior-hold-tap";
             label = "LAYER_TAP_TO_0";
             bindings = <&mo>, <&to_layer_0>;
-
             #binding-cells = <2>;
             tapping-term-ms = <200>;
         };
@@ -86,7 +104,6 @@
         compatible = "zmk,keymap";
 
         /* L0 */
-
         default_layer {
             bindings = <
 &kp Q               &kp W         &kp E         &kp R                   &kp T                                                   &kp Y        &kp U  &kp I      &kp O    &lt 5 P
@@ -98,43 +115,39 @@
             sensor-bindings = <&inc_dec_kp PG_UP PAGE_DOWN>;
         };
 
-        /* L1 */
-
+        /* L1 (SOA39準拠に寄せる) */
         FUNCTION {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                       &kp F1  &kp F2  &kp F3  &kp F4  &kp F5
-&trans  &trans  &trans  &trans  &trans  &trans      &kp F13  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10
-&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans  &trans  &trans  &trans  &kp F11
-&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans                          &kp F12
+&mt F1 F11            &mt F2 F12       &kp F3       &kp F4     &kp F5  &kp F6  &kp F7            &kp F8                &kp F9                 &kp F10
+&kp AMPERSAND         &kp ASTRK        &kp LPAR     &kp RPAR   &trans  &trans  &kp LEFT_BRACKET  &kp RIGHT_BRACKET     &kp NON_US_BACKSLASH   &kp GRAVE   &trans  &trans
+&kp SQT               &kp DOLLAR       &kp PERCENT  &kp CARET  &trans  &trans  &trans            &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp PIPE    &trans  &trans
+&mt LEFT_SHIFT MINUS  &kp EXCLAMATION  &kp AT_SIGN  &kp HASH   &trans  &trans  &trans            &kp LEFT_BRACE        &kp RIGHT_BRACE
             >;
         };
 
-        /* L2 */
-
+        /* L2 (SOA39準拠に寄せる) */
         NUM {
             bindings = <
-&kp MINUS                   &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp PLUS                                                   &kp CARET         &kp AMPERSAND      &kp TILDE       &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS
-&kp SLASH                   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp ASTERISK  &kp LC(LA(KP_NUMBER_0))      &kp UNDERSCORE  &kp EXCLAMATION   &kp AT_SIGN        &kp HASH        &kp DOLLAR            &kp PERCENT
-&mt LEFT_SHIFT KP_NUMBER_0  &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PERIOD    &kp EQUAL                    &trans          &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LEFT_BRACE  &kp RIGHT_BRACE       &kp BACKSLASH
-&trans                      &trans           &trans           &trans           &trans        &trans                       &trans          &trans                                                                     &kp PIPE
+&kp N1            &kp N2             &kp N3          &kp N4           &kp N5         &kp N6          &kp N7  &kp N8      &kp N9     &kp N0
+&trans            &trans             &trans          &kp SLASH        &kp BACKSLASH  &mul_mark       &kp N4  &kp N5      &kp N6     &kp ASTERISK  &trans  &trans
+&kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LEFT_BRACE  &kp RIGHT_BRACE  &kp PIPE       &div_mark       &kp N0  &kp N1      &kp N2     &kp N3        &trans  &trans
+&trans            &trans             &trans          &trans           &trans         &kp LANGUAGE_1  &trans  &kp PERIOD  &kp SLASH
             >;
         };
 
-        /* L3 */
-
+        /* L3 (SOA39準拠に寄せる) */
         ARROW {
             bindings = <
-&kp ESCAPE      &kp LC(LS(TAB))         &kp UP_ARROW    &kp LC(TAB)              &trans                       &trans  &trans  &trans  &trans  &trans
-&kp HOME        &kp LEFT_ARROW          &kp DOWN_ARROW  &kp RIGHT_ARROW          &kp END  &trans      &trans  &trans  &trans  &trans  &trans  &trans
-&kp LEFT_SHIFT  &kp LG(LS(LEFT_ARROW))  &trans          &kp LG(LS(RIGHT_ARROW))  &trans   &trans      &trans  &trans  &trans  &trans  &trans  &trans
-&trans          &trans                  &trans          &trans                   &trans   &trans      &trans  &trans                          &trans
+&kp PG_UP  &trans    &kp UP    &trans     &kp PG_DN  &trans             &trans              &kp LG(UP_ARROW)    &trans               &trans
+&kp HOME   &kp LEFT  &kp DOWN  &kp RIGHT  &kp END    &kp LG(LC(PSCRN))  &kp LG(LEFT_ARROW)  &kp LG(DOWN_ARROW)  &kp LG(RIGHT_ARROW)  &trans  &trans  &trans
+&trans     &trans    &trans    &trans     &trans     &kp LS(PSCRN)      &trans              &trans              &trans               &trans  &trans  &trans
+&trans     &trans    &trans    &trans     &trans     &kp BACKSPACE      &trans              &trans              &trans
             >;
 
             sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
         };
 
         /* L4 (AMLの行き先＝MOUSE) */
-
         MOUSE {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                      &trans  &trans              &trans               &trans    &trans
@@ -145,7 +158,6 @@
         };
 
         /* L5 */
-
         SCROLL {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans  &trans  &trans
@@ -156,7 +168,6 @@
         };
 
         /* L6 */
-
         Bluetooth {
             bindings = <
 &trans  &trans        &trans        &trans        &trans                           &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
@@ -166,8 +177,7 @@
             >;
         };
 
-        /* L7 (Gesture layer) */
-
+        /* L7 */
         Gesture_L7 {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans  &trans  &trans
@@ -177,8 +187,7 @@
             >;
         };
 
-        /* L8 (Gesture layer) */
-
+        /* L8 */
         Gesture_L8 {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans  &trans  &trans
@@ -188,8 +197,7 @@
             >;
         };
 
-        /* L9 (Gesture layer) */
-
+        /* L9 */
         Gesture_L9 {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans  &trans  &trans
