@@ -46,6 +46,16 @@
             key-positions = <24 25>;
         };
 
+        jkl_test {
+            bindings = <&none>;
+            key-positions = <18 19 20>;
+        };
+
+        op_test {
+            bindings = <&none>;
+            key-positions = <8 9>;
+        };
+
         /*
          * ここに Gesture(L7/L8/L9)切替用 combo を追加したければ後で足す。
          * （pos番号が確定してからの方が安全）
@@ -128,7 +138,7 @@
         MOUSE {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                      &trans  &trans              &trans               &trans    &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &mkp MB1            &mkp MB3             &mkp MB2  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &mkp MB1            &mkp MB3             &mkp MB2  &lt 5 MINUS
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &kp LA(LEFT_ARROW)  &kp LA(RIGHT_ARROW)  &trans    &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                                     &trans
             >;
