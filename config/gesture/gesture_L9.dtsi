@@ -1,20 +1,20 @@
 #include <dt-bindings/zmk/keys.h>
-#include <mouse-gesture.dtsi>
 
-/ {
+ / {
   zip_mouse_gesture_l9: zip_mouse_gesture_l9 {
     compatible = "zmk,input-processor-mouse-gesture";
     #input-processor-cells = <0>;
 
     enable-eager-mode;
     stroke-size = <250>;
-    movement-threshold = <8>;
+    movement-threshold = <6>;
     idle-timeout-ms = <120>;
     gesture-cooldown-ms = <120>;
 
-    back  { pattern = <GESTURE_LEFT>;  bindings = <&kp LA(LEFT)>; };
-    fwd   { pattern = <GESTURE_RIGHT>; bindings = <&kp LA(RIGHT)>; };
-    up    { pattern = <GESTURE_UP>;    bindings = <&kp PG_UP>; };
-    down  { pattern = <GESTURE_DOWN>;  bindings = <&kp PG_DN>; };
+    /* 例: デスクトップ切替 */
+    prev_desktop { pattern = <GESTURE_LEFT>;  bindings = <&kp LG(LC(LEFT_ARROW))>; };
+    next_desktop { pattern = <GESTURE_RIGHT>; bindings = <&kp LG(LC(RIGHT_ARROW))>; };
+    show_desktop { pattern = <GESTURE_DOWN>;  bindings = <&kp LG(D)>; };
+    search       { pattern = <GESTURE_UP>;    bindings = <&kp LG(S)>; };
   };
 };
