@@ -51,9 +51,20 @@
         };
 
         /* Gesture layers (L7/L8/L9) */
-        gesture_l7 { layers = <7>; input-processors = <&zip_mouse_gesture_l7>; };
-        gesture_l8 { layers = <8>; input-processors = <&zip_mouse_gesture_l8>; };
-        gesture_l9 { layers = <9>; input-processors = <&zip_mouse_gesture_l9>; };
+        gesture_l7 {
+            layers = <7>;
+            input-processors = <&zip_mouse_gesture_l7>;
+        };
+
+        gesture_l8 {
+            layers = <8>;
+            input-processors = <&zip_mouse_gesture_l8>;
+        };
+
+        gesture_l9 {
+            layers = <9>;
+            input-processors = <&zip_mouse_gesture_l9>;
+        };
     };
 };
 
